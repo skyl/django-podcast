@@ -1,0 +1,25 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}Podcasts{% endblock %}
+
+{% block extra_head %}
+<link href="http://django-podcast.googlecode.com/svn/trunk/podcast/media/base.css" rel="stylesheet" type="text/css" media="screen" />
+{% endblock %}
+
+{% block rtab_id %}id="photos_tab"{% endblock %}
+
+{% block subnav %}
+    {% if user.is_authenticated %}
+        <ul>
+            <li><a href="{% url podcast_shows %} ">{% trans "Latest Podcasts" %}</a></li>
+            <li><a href="{% url podcast_friends %}">{% trans "Friends' Podcasts" %}</a></li>
+            <li><a href="{% url podcast_yours %}">{% trans "Your Podcasts" %}</a></li>
+            <li><a href="{% url podcast_create %}">{% trans "Start a Show" %}</a></li>
+        </ul>
+    {% else %}
+        &nbsp;
+    {% endif %}
+{% endblock %}
+
