@@ -1,18 +1,9 @@
-from podcast.models import ParentCategory, ChildCategory, MediaCategory, Show, Enclosure, Episode
+from podcast.models import MediaCategory, Show, Enclosure, Episode
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
 
-class CategoryInline(admin.StackedInline):
-    model = ChildCategory
-    extra = 3
 
-class ParentCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    inlines = [CategoryInline,]
-
-class ChildCategoryAdmin(admin.ModelAdmin):
-    list_display = ('parent', 'name')
 
 class MediaCategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -26,7 +17,7 @@ class ShowAdmin(admin.ModelAdmin):
             'fields': ('organization', 'author', 'webmaster', 'title', 'slug', 'link', 'description', 'image', 'category_show', 'domain', 'language', 'ttl', 'copyright', 'copyright_url', 'feedburner')
         }),
         ('iTunes', {
-            'fields': ('subtitle', 'summary', 'category', 'keywords', ('explicit', 'block'), 'redirect', 'itunes')
+            'fields': ('subtitle', 'summary', 'keywords', ('explicit', 'block'), 'redirect', 'itunes')
         }),
     )
 
@@ -52,7 +43,7 @@ class EpisodeAdmin(admin.ModelAdmin):
     radio_fields = {'title_type': admin.HORIZONTAL, 'description_type': admin.HORIZONTAL, 'status': admin.HORIZONTAL}
     fieldsets = (
         (None, {
-            'fields': ('show', 'author', 'title_type', 'title', 'slug', 'description_type', 'description', 'captions', 'category', 'domain', 'frequency', 'priority', 'status')
+            'fields': ('show', 'title_type', 'title', 'slug', 'description_type', 'description', 'captions', 'category', 'domain', 'frequency', 'priority', 'status')
         }),
         ('iTunes', {
             'fields': ('subtitle', 'summary', ('minutes', 'seconds'), 'keywords', ('explicit', 'block'))
@@ -72,8 +63,6 @@ class EpisodeAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(ParentCategory, ParentCategoryAdmin)
-admin.site.register(ChildCategory, ChildCategoryAdmin)
 admin.site.register(MediaCategory, MediaCategoryAdmin)
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Enclosure, EnclosureAdmin)

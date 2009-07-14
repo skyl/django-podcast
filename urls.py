@@ -11,6 +11,10 @@ urlpatterns = patterns('podcast.views',
     url(r'^__create/$', view='create', name='podcast_create'),
     url(r'^__update/(?P<slug>[-\w]+)/$', view='update', name='podcast_update'),
 
+    url(r'^(?P<slug>[-\w]+)/add_episode/$', view='episode_add',\
+            name='podcast_episode_add'),
+
+
 
     # Episode list of one show
     url(r'^(?P<slug>[-\w]+)/$', view='episode_list', name='podcast_episodes'),
