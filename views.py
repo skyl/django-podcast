@@ -238,7 +238,7 @@ def enclosure_add(request, show_slug, episode_slug):
         return HttpResponseRedirect(reverse('podcast_shows'))
 
     if request.method == 'POST':
-        form = EnclosureForm(request.POST)
+        form = EnclosureForm(request.POST, request.FILES)
         if form.is_valid():
             en = form.save(commit=False)
             en.episode = episode

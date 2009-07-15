@@ -5,7 +5,7 @@
 {% block head_title %}{% blocktrans %}Create New Episode for {% endblocktrans %}{{show.name}}{% endblock %}
 
 {% block body %}
-    <form class="uniForm" id="edit-profile" method="POST" enctype="multipart/form-data" action="">
+    <form class="uniForm" id="new-episode" method="POST" action="">
         <fieldset class="inlineLabels">
             {{ form|as_uni_form }}
             <div class="form_block">
