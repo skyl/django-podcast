@@ -13,18 +13,13 @@
     <h1>{{show.title}}</h1>
 
 <p class="back"><a href="{% url podcast_shows %}">Return to shows</a></p>
-    <p>Episodes:</p>
-
-
 
 {% if is_me %}
    <a href={% url podcast_episode_add show.slug %}>Add an episode</a>    
 {% endif %}
-
 {% regroup object_list by show as show_list %}
 
 {% for show in show_list %}
-<h2>{{ show.grouper.title }}</h2>
 <h3>{{ show.grouper.subtitle }}</h3>
 
 {% if show.grouper.explicity %}<p>Explicit</p>{% endif %}
@@ -32,10 +27,11 @@
 <dl>
   {% if show.grouper.category.all %}<dt>Category</dt>
     <dd>{% for category in show.grouper.category.all|slice:":1" %}{{ category.name }}{% endfor %}</dd>{% endif %}
-  <dt>Author</dt>{% for author in show.grouper.author.all %}
-    <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
+    <dt>Author</dt>
+  <dd>{% if show.grouper.author.email %}<a href="mailto:{{ show.grouper.author.email }}">{% endif %}
+      {% if show.grouper.author.first_name or show.grouper.author.last_name %}{% if show.grouper.uthor.first_name and show.grouper.author.last_name %}{{ author.first_name }} {{ show.grouper.author.last_name }}{% endif %}{% if show.grouper.author.first_name and not show.grouper.author.last_name %}{{ show.grouper.author.first_name }}{% endif %}{% if show.grouper.author.last_name and not show.grouper.author.first_name %}{{ show.grouper.author.last_name }}{% endif %}{% else %}{{ show.grouper.author.username }}{% endif %}{% if show.grouper.author.email %}</a>{% endif %}</dd>{% endfor %}
   <dt>RSS</dt>
-    <dd><a href="{% url podcast_feed object_list.all.0.slug %}">Subscribe</a></dd>
+    <dd><a href="{% url podcast_feed show.slug %}">Subscribe</a></dd>
   {% if show.grouper.feedburner %}<dt>FeedBurner</dt>
     <dd><a href="{{ show.grouper.feedburner }}">Subscribe</a></dd>{% endif %}
   {% if show.grouper.itunes %}<dt>iTunes</dt>
@@ -46,7 +42,9 @@
 
 <p>{% if show.grouper.summary %}{{ show.grouper.summary }}{% else %}{{ show.grouper.description|striptags }}{% endif %}</p>
 
-{% for episode in show.list %}
+{% for episode in show.episode_set.all %}
+
+<hr>
 
 <h4><a href="{{ episode.get_absolute_url }}">{{ episode.title }}</a></h4>
 <h5>{{ episode.subtitle }}</h5>
@@ -54,7 +52,12 @@
 {% if episode.image %}<div class="image"><a href="{{ episode.get_absolute_url }}"><img src="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}" alt="{{ episode.title }} episode screenshot" /></a></div>{% endif %}
 
 <p>{% if episode.summary %}{{ episode.summary }}{% else %}{{ episode.description|striptags }}{% endif %}</p>
-{% endfor %}
+
+
+{% if is_me %}
+<a href="{% url podcast_episode_delete episode.show.slug episode.slug %}">Delete this episode</a>
+
+{% endif %}
 
 {% endfor %}
 

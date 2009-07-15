@@ -1,34 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% extends 'podcast/base.html' %}
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>{% block title %}{{ object.title }} &#8226; {{ object.show.title }}{% endblock %}</title>
+{% block head_title %}{{ object.title }} &#8226; {{ object.show.title }}{% endblock %}
+
+{% block extra_head %}
 <link rel="alternate" type="application/rss+xml" title="{{ object.title }} podcast feed" href="{% url podcast_feed object.show.slug %}" />
-<link href="http://django-podcast.googlecode.com/svn/trunk/podcast/media/base.css" rel="stylesheet" type="text/css" media="screen" />
-</head>
-
-<body>
-
-<div id="header-wrap">
-<div id="header">
-{% block header %}
-<h1>Django podcast</h1>
 {% endblock %}
-</div>
-</div>
 
-<div id="return-wrap">
-<div id="return">
-<p>A detail of one episode of one show</p>
-</div>
-</div>
 
-<div id="content-wrap">
-<div id="content">
-{% block content %}
+{% block body %}
+<h1>{{object.show.title}}</h1>
 
 <p class="back"><a href="{% url podcast_episodes object.show.slug %}">Return to episodes</a></p>
+
+{% if is_me %}
+    <a href="{% url podcast_enclosure_add object.show.slug object.slug %}">Add media</a>
+{% endif %}
 
 <h2>{{ object.title }}</h2>
 
@@ -56,24 +42,19 @@
 <h3>Download this episode</h3>
 
 <ul>
-  {% for enclosure in enclosure_list %}
-  <li><a href="{{ enclosure.file.url }}"><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}</strong></a> ({{ enclosure.file.size|filesizeformat }})</li>
+    {% for enclosure in enclosure_list %}
+    {% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}
+      {% if enclosure.file %}
+      <li><a href="{{ enclosure.file.url }}"><strong>{% if enclosure.title %}{{ enclosure.title }}{% else %}{{ object.title }}{% endif %}</strong></a> ({{ enclosure.file.size|filesizeformat }})</li>
+      {% endif %}
+      {% if enclosure.player %}
+          <a href="{{ enclosure.player }}">Play here</a>
+      {% endif %}
   {% endfor %}
 </ul>
 
 {% if object.captions %}<p><a href="{{ object.captions.url }}">Download the closed captions</a>.</p>{% endif %}
 
 {% endblock %}
-</div>
-</div>
 
-<div id="footer-wrap">
-<div id="footer">
-{% block footer %}
-<p>&#169; {% now "Y" %} {{ object.show.organization }}. <a href="{% url podcast_feed object.show.slug %}">Subscribe</a>.</p>
-{% endblock %}
-</div>
-</div>
 
-</body>
-</html>

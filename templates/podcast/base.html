@@ -14,7 +14,9 @@
     {% if user.is_authenticated %}
         <ul>
             <li><a href="{% url podcast_shows %} ">{% trans "Latest Podcasts" %}</a></li>
+            {% comment %}
             <li><a href="{% url podcast_friends %}">{% trans "Friends' Podcasts" %}</a></li>
+            {% endcomment %}
             <li><a href="{% url podcast_yours %}">{% trans "Your Podcasts" %}</a></li>
             <li><a href="{% url podcast_create %}">{% trans "Start a Show" %}</a></li>
         </ul>

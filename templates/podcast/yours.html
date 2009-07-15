@@ -1,61 +1,21 @@
-{% extends 'podcast/base.html' %}
-
-{% block title %}{% regroup object_list by show as show_list %}{% for show in show_list %}{{ show.grouper.title }}{% endfor %}{% endblock %}
-
-{% block extra_head %}
-{% if object_list.all.0.slug %}
-<link rel="alternate" type="application/rss+xml" title="{{ object_list.all.0.title }} podcast feed" href="{% url podcast_feed object_list.all.0.slug %}" />
-{% endif %}
-{% endblock %}
-
+{% extends "podcast/base.html" %}
 
 {% block body %}
-    <h1>{{show.title}}</h1>
+<h1>Your Shows</h1>
 
-<p class="back"><a href="{% url podcast_shows %}">Return to shows</a></p>
-    <p>Episodes:</p>
+{% for show in object_list %}
 
+<h2><a href="{{ show.get_absolute_url }}">{{ show.title }}</a></h2>
 
+<h3>{{ show.organization }}</h3>
 
-{% if is_me %}
-   <a href={% url podcast_episode_add show.slug %}>Add an episode</a>    
+{% if show.image %}
+<div class="image"><a href="{{ show.get_absolute_url }}"><img src="{{ show.image.url }}" width="{{ show.image.width }}" height="{{ show.image.height }}" alt="{{ show.organization }} show logo" /></a></div>
 {% endif %}
 
-{% regroup object_list by show as show_list %}
-
-{% for show in show_list %}
-<h2>{{ show.grouper.title }}</h2>
-<h3>{{ show.grouper.subtitle }}</h3>
-
-{% if show.grouper.explicity %}<p>Explicit</p>{% endif %}
-
-<dl>
-  {% if show.grouper.category.all %}<dt>Category</dt>
-    <dd>{% for category in show.grouper.category.all|slice:":1" %}{{ category.name }}{% endfor %}</dd>{% endif %}
-  <dt>Author</dt>{% for author in show.grouper.author.all %}
-    <dd>{% if author.email %}<a href="mailto:{{ author.email }}">{% endif %}{% if author.first_name or author.last_name %}{% if author.first_name and author.last_name %}{{ author.first_name }} {{ author.last_name }}{% endif %}{% if author.first_name and not author.last_name %}{{ author.first_name }}{% endif %}{% if author.last_name and not author.first_name %}{{ author.last_name }}{% endif %}{% else %}{{ author.username }}{% endif %}{% if author.email %}</a>{% endif %}</dd>{% endfor %}
-  <dt>RSS</dt>
-    <dd><a href="{% url podcast_feed object_list.all.0.slug %}">Subscribe</a></dd>
-  {% if show.grouper.feedburner %}<dt>FeedBurner</dt>
-    <dd><a href="{{ show.grouper.feedburner }}">Subscribe</a></dd>{% endif %}
-  {% if show.grouper.itunes %}<dt>iTunes</dt>
-    <dd><a href="{{ show.grouper.itunes }}">Subscribe</a></dd>{% endif %}
-</dl>
-
-{% if show.grouper.image %}<div class="image"><img src="{{ show.grouper.image.url }}" width="{{ show.grouper.image.width }}" height="{{ show.grouper.image.height }}" alt="{{ show.grouper.organization }} show logo" /></div>{% endif %}
-
-<p>{% if show.grouper.summary %}{{ show.grouper.summary }}{% else %}{{ show.grouper.description|striptags }}{% endif %}</p>
-
-{% for episode in show.list %}
-
-<h4><a href="{{ episode.get_absolute_url }}">{{ episode.title }}</a></h4>
-<h5>{{ episode.subtitle }}</h5>
-
-{% if episode.image %}<div class="image"><a href="{{ episode.get_absolute_url }}"><img src="{{ episode.image.url }}" width="{{ episode.image.width }}" height="{{ episode.image.height }}" alt="{{ episode.title }} episode screenshot" /></a></div>{% endif %}
-
-<p>{% if episode.summary %}{{ episode.summary }}{% else %}{{ episode.description|striptags }}{% endif %}</p>
-{% endfor %}
-
+<p>{% if show.summary %}{{ show.summary }}{% else %}{{ show.description|striptags }}{% endif %}</p>
 {% endfor %}
 
 {% endblock %}
+
+

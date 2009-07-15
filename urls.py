@@ -14,6 +14,13 @@ urlpatterns = patterns('podcast.views',
     url(r'^(?P<slug>[-\w]+)/add_episode/$', view='episode_add',\
             name='podcast_episode_add'),
 
+    url(r'^(?P<show_slug>[-\w]+)/(?P<episode_slug>[-\w]+)/delete/$',\
+            view='episode_delete', name='podcast_episode_delete'),
+
+    url(r'^(?P<show_slug>[-\w]+)/(?P<episode_slug>[-\w]+)/add/$',\
+            view='enclosure_add', name='podcast_enclosure_add'),
+
+
 
 
     # Episode list of one show
@@ -24,7 +31,7 @@ urlpatterns = patterns('podcast.views',
 
     # Episode list feed by show (Atom)
     url(r'^(?P<slug>[-\w]+)/atom/$', view='show_list_atom', name='podcast_atom'),
-    
+
     # Episode list feed by show (Media RSS)
     url(r'^(?P<slug>[-\w]+)/media/$', view='show_list_media', name='podcast_media'),
 
