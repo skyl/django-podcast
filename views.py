@@ -1,5 +1,8 @@
 from django.views.generic.list_detail import object_list
 from django.views.generic.list_detail import object_detail
+
+from django.contrib.sites.models import Site
+
 from podcast.models import Episode, Show, Enclosure
 
 from django.contrib.auth.decorators import login_required
@@ -120,7 +123,9 @@ def show_list_feed(request, slug):
     except:
         return HttpResponseRedirect(reverse('podcast_episodes', args=[slug]))
 
-    context = {'show':show, }
+    site = Site.objects.get_current()
+
+    context = {'show':show, 'site':site,}
     return object_list(
         request,
         mimetype='application/rss+xml',

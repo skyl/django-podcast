@@ -86,14 +86,12 @@
         {% if episode.category %}<category{% if episode.domain %} url="{{ episode.domain }}"{% endif %}>{{ episode.category }}</category>{% endif %}
         
 
-    {% comment %} 
     {% if episode.enclosure_set.all.0.file %} 
-        <enclosure url="{{ episode.enclosure_set.all.0.file.url }}" />
+    <enclosure url="http://{{site}}{{ episode.enclosure_set.all.0.file.url }}" />
         
         <guid isPermalink="true">{{ episode.enclosure_set.all.0.file.url }}</guid>
     {% endif %}
 
-    {% endcomment %}
 
      {% if episode.enclosure_set.all.0.player %} 
         <enclosure url="{{ episode.enclosure_set.all.0.player }}" type="{{ episode.enclosure_set.all.0.mime }}" />
