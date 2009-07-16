@@ -20,6 +20,8 @@ urlpatterns = patterns('podcast.views',
     url(r'^(?P<show_slug>[-\w]+)/(?P<episode_slug>[-\w]+)/add/$',\
             view='enclosure_add', name='podcast_enclosure_add'),
 
+    url(r'^(?P<show_slug>[-\w]+)/(?P<episode_slug>[-\w]+)/(?P<enclosure_slug>[-\w]+)/delete/$',\
+            view='enclosure_delete', name='podcast_enclosure_delete'),
 
 
 

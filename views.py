@@ -115,11 +115,18 @@ def show_list_feed(request, slug):
         object_list
             List of episodes by show.
     """
+    try:
+        show = Show.objects.get(slug=slug)
+    except:
+        return HttpResponseRedirect(reverse('podcast_episodes', args=[slug]))
+
+    context = {'show':show, }
     return object_list(
         request,
         mimetype='application/rss+xml',
-        queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
-        template_name='podcast/show_feed.html')
+        queryset=Episode.objects.filter(show__slug=slug).order_by('-date')[:],
+        template_name='podcast/show_feed.html',
+        extra_context = context)
 
 
 def show_list_media(request, slug):
@@ -242,6 +249,7 @@ def enclosure_add(request, show_slug, episode_slug):
         if form.is_valid():
             en = form.save(commit=False)
             en.episode = episode
+            en.slug = slugify(en.title)
             en.save()
             return HttpResponseRedirect(reverse('podcast_episode',\
                     args=[show_slug, episode_slug]))
@@ -260,5 +268,15 @@ def episode_delete(request, show_slug, episode_slug):
     return delete_object(request, model=Episode, slug=episode_slug, slug_field='slug',\
             post_delete_redirect=reverse('podcast_episodes', args=[show_slug]),
             template_name="podcast/confirm_delete.html")
+
+@login_required
+def enclosure_delete(request, show_slug, episode_slug, enclosure_slug):
+    #e = Episode.objects.get(slug=slug)
+    #if e.show.author == request.user:
+
+    return delete_object(request, model=Enclosure, slug=enclosure_slug, slug_field='slug',\
+            post_delete_redirect=reverse('podcast_episode', args=[show_slug,\
+            episode_slug]), template_name="podcast/confirm_delete.html")
+
 
 

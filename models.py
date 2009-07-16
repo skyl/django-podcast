@@ -3,6 +3,8 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 from podcast.managers import EpisodeManager
 
+from django.conf import settings
+
 from constants import CATEGORY_CHOICES, COPYRIGHT_CHOICES, EXPLICIT_CHOICES
 
 class Show(models.Model):
@@ -382,7 +384,10 @@ class Enclosure(models.Model):
         ('MD5', 'MD5'),
         ('SHA-1', 'SHA-1'),
     )
+
     title = models.CharField(max_length=255, help_text='Title is generally only useful with multiple enclosures.')
+    slug = models.SlugField(unique=True, help_text='Auto-generated from Title.')
+
     file = models.FileField(upload_to='podcasts/episodes/files/', help_text='Either upload or use the "Player" text box below. If uploading, file must be less than or equal to 30 MB for a Google video sitemap.', blank=True, null=True)
     mime = models.CharField('Format', max_length=255, choices=MIME_CHOICES, default='video/mp4', blank=True)
     medium = models.CharField(max_length=255, blank=True, choices=MEDIUM_CHOICES)
@@ -404,3 +409,9 @@ class Enclosure(models.Model):
 
     def __unicode__(self):
         return u'%s' % (self.file)
+
+    #def save(self, force_insert=False, force_update=False):
+    #    if self.file and not self.player:
+    #        self.player = self.file.url
+    #    super(Enclosure, self).save(force_insert, force_update) # Call the "real" save() method.
+
