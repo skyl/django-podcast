@@ -52,7 +52,7 @@
       {% endif %}
 
       {% if is_me %}
-      <a href = "{% url podcast_enclosure_delete enclosure.episode.show.slug enclosure.episode.slug enclosure.title|slugify %}">Delete this enclosure</a>
+      <a href = "{% url podcast_enclosure_delete enclosure.episode.show.slug enclosure.episode.slug enclosure.slug %}">Delete this enclosure</a>
       {% endif %}
   {% endfor %}
 </ul>

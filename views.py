@@ -121,7 +121,7 @@ def show_list_feed(request, slug):
     try:
         show = Show.objects.get(slug=slug)
     except:
-        return HttpResponseRedirect(reverse('podcast_episodes', args=[slug]))
+        return HttpResponseRedirect(reverse('podcast_shows'))
 
     site = Site.objects.get_current()
 
@@ -161,13 +161,22 @@ def show_list_atom(request, slug):
         object_list
             List of episodes by show.
     """
+    try:
+        show = Show.objects.get(slug=slug)
+    except:
+        return HttpResponseRedirect(reverse('podcast_shows'))
+
+    site = Site.objects.get_current()
+
+    encs = Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date')
+    context = {'show':show, 'site':site, 'enclosures':encs, }
+
     return object_list(
         request,
         mimetype='application/rss+xml',
         queryset=Episode.objects.filter(show__slug__exact=slug).order_by('-date')[0:21],
-        extra_context={
-            'enclosure_list': Enclosure.objects.filter(episode__show__slug__exact=slug).order_by('-episode__date')},
-        template_name='podcast/show_feed_atom.html')
+        template_name='podcast/show_feed_atom.html',
+        extra_context=context)
 
 @login_required
 def yours(request):
@@ -233,7 +242,7 @@ def episode_add(request, slug):
                     #            ''.join([choice('0123456789-_') for i in range(7)])
             #    e.save()
             #finally:
-            return HttpResponseRedirect(reverse('podcast_episodes', args=[slug]))
+            return HttpResponseRedirect(reverse('podcast_episode', args=[slug, e.slug]))
 
 
     context={'show':show}

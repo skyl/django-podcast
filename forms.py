@@ -14,4 +14,4 @@ class EpisodeForm(ModelForm):
 class EnclosureForm(ModelForm):
     class Meta:
         model = Enclosure
-        exclude = ('episode',)
+        exclude = ('episode','slug')
